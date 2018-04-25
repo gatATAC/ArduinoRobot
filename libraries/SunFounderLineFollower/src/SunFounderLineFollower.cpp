@@ -80,9 +80,19 @@ int * SunFounderLineFollower::rawarray() {
   return raw;
 }
 
-int SunFounderLineFollower::byteprocessed(int s) {
+int SunFounderLineFollower::byteprocessed(int s, bool show = false) {
   int r = 0;
+  int readValue;
   Wire.requestFrom(9, 16);
-  for (int i=0; i <= 7; i++) (( Wire.read() << 8 | Wire.read() ) > s)?r|=1<<i:r&=~(1<<i);
+  for (int i=0; i <= 7; i++) {
+    readValue = ( Wire.read() << 8 | Wire.read() );
+    if (show){
+      Serial.println(readValue);
+    }
+    (readValue > s)?r|=1<<i:r&=~(1<<i);
+  }
   return r;
+}
+int SunFounderLineFollower::byteprocessed(int s) {
+  return byteprocessed(s,false);
 }
